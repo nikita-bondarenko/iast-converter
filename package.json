@@ -1,0 +1,45 @@
+{
+  "name": "iast-to-rus",
+  "version": "0.1.0",
+  "description": "CLI tool and library that converts Sanskrit text from IAST transliteration to Russian diacritic notation.",
+  "type": "module",
+  "main": "dist/cli.js",
+  "bin": {
+    "iast2rus": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/cli.ts",
+    "dev": "ts-node-dev --respawn src/cli.ts",
+    "electron": "tsc && electron dist/electron/main.js",
+    "web:dev": "vite --config web/vite.config.ts",
+    "web:build": "vite build --config web/vite.config.ts",
+    "web:preview": "vite preview --config web/vite.config.ts"
+  },
+  "keywords": [
+    "IAST",
+    "sanskrit",
+    "transliteration",
+    "russian",
+    "cli"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^10.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "electron": "^28.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.10",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.3.3",
+    "@types/react": "^18.2.25",
+    "@types/react-dom": "^18.2.9",
+    "vite": "^5.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "electron": "^28.2.0"
+  }
+}
