@@ -36,8 +36,10 @@ jobs:
       - name: Build web assets
         run: pnpm run web:build
 
-      - name: Build Tauri macOS (universal)
-        run: pnpm run tauri build -- --target universal-apple-darwin
+      - name: Build Tauri macOS (Apple Silicon & Intel)
+        run: |
+          pnpm run tauri build -- --target aarch64-apple-darwin
+          pnpm run tauri build -- --target x86_64-apple-darwin
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
