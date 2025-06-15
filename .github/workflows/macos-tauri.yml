@@ -1,0 +1,50 @@
+name: build-macos-tauri
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: 'aarch64-apple-darwin,x86_64-apple-darwin'
+
+      - name: Cache Rust dependencies
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install pnpm & project dependencies
+        run: |
+          npm install -g pnpm@latest
+          pnpm install --no-frozen-lockfile
+
+      - name: Build web assets
+        run: pnpm run web:build
+
+      - name: Build Tauri macOS (universal)
+        run: pnpm run tauri build -- --target universal-apple-darwin
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-builds
+          path: |
+            src-tauri/target/*apple-darwin*/release/bundle/app/*.app
+            src-tauri/target/*apple-darwin*/release/bundle/dmg/*.dmg
+          if-no-files-found: error 

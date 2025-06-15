@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { convertIastToRus } from '../../src/converter';
 import './app.css';
 
@@ -13,7 +13,43 @@ const examples = [
 
 const App: React.FC = () => {
   const [input, setInput] = useState('');
+  type DownloadItem = { name: string; url: string };
+  const [downloads, setDownloads] = useState<DownloadItem[]>([]);
   const output = convertIastToRus(input);
+
+  useEffect(() => {
+    // Получаем список доступных файлов для скачивания
+    fetch('/downloads/')
+      .then(response => response.text())
+      .then(html => {
+        // Простой парсинг HTML для извлечения ссылок на файлы
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const links = Array.from(doc.querySelectorAll('a[href]'))
+          .map(link => link.getAttribute('href'))
+          .filter(href => href && !href.startsWith('..') && href !== '/')
+          .map(href => href!.replace(/\/$/, ''));
+        const items = links.map(name => ({ name, url: `/downloads/${name}` }));
+        setDownloads(items);
+      })
+      .catch(() => {
+        setDownloads([]);
+      });
+
+    // Дополнительно пробуем получить последние релизы GitHub
+    const owner = 'nikita-bondarenko';
+    const repo = 'iast-converter';
+    fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`)
+      .then(res => res.ok ? res.json() : Promise.reject())
+      .then((data) => {
+        if (!data.assets) return;
+        const ghItems: DownloadItem[] = data.assets
+          .filter((a: any) => a.name.endsWith('.dmg'))
+          .map((a: any) => ({ name: a.name, url: a.browser_download_url }));
+        setDownloads(prev => [...prev, ...ghItems]);
+      })
+      .catch(() => {/*ignore*/});
+  }, []);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(output);
@@ -48,8 +84,60 @@ const App: React.FC = () => {
           </div>
         ))}
       </div>
+
+      <div className="downloads">
+        <h3>📱 Скачать десктопное приложение:</h3>
+        <div className="download-grid">
+          {downloads.length > 0 ? (
+            downloads.map(({ name, url }) => (
+              <div key={name} className="download-item">
+                <a 
+                  href={url} 
+                  download 
+                  className="download-link"
+                  onClick={(e) => {
+                    // Показать информацию о скачивании
+                    const platform = getPlatformFromFilename(name);
+                    console.log(`Скачивание для ${platform}: ${name}`);
+                  }}
+                >
+                  <div className="download-icon">
+                    {getIconForPlatform(name)}
+                  </div>
+                  <div className="download-info">
+                    <div className="platform-name">
+                      {getPlatformFromFilename(name)}
+                    </div>
+                    <div className="file-name">{name}</div>
+                  </div>
+                </a>
+              </div>
+            ))
+          ) : (
+            <div className="loading">Загрузка файлов для скачивания...</div>
+          )}
+        </div>
+      </div>
     </div>
   );
+};
+
+// Вспомогательные функции
+const getPlatformFromFilename = (filename: string): string => {
+  if (filename.includes('.deb') || filename.includes('.AppImage')) return 'Linux';
+  if (filename.includes('.msi') || filename.includes('.exe')) return 'Windows';  
+  if (filename.includes('.dmg') || filename.includes('apple-darwin')) {
+    if (filename.includes('aarch64')) return 'macOS (Apple Silicon)';
+    return 'macOS (Intel)';
+  }
+  return 'Другое';
+};
+
+const getIconForPlatform = (filename: string): string => {
+  if (filename.includes('.deb') || filename.includes('.AppImage')) return '🐧';
+  if (filename.includes('.msi') || filename.includes('.exe')) return '🪟';
+  if (filename.includes('.dmg') || filename.includes('apple-darwin')) return '🍎';
+  return '📦';
 };
 
 export default App; 
