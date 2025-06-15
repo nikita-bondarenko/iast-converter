@@ -84,40 +84,6 @@ const App: React.FC = () => {
           </div>
         ))}
       </div>
-
-      <div className="downloads">
-        <h3>📱 Скачать десктопное приложение:</h3>
-        <div className="download-grid">
-          {downloads.length > 0 ? (
-            downloads.map(({ name, url }) => (
-              <div key={name} className="download-item">
-                <a 
-                  href={url} 
-                  download 
-                  className="download-link"
-                  onClick={(e) => {
-                    // Показать информацию о скачивании
-                    const platform = getPlatformFromFilename(name);
-                    console.log(`Скачивание для ${platform}: ${name}`);
-                  }}
-                >
-                  <div className="download-icon">
-                    {getIconForPlatform(name)}
-                  </div>
-                  <div className="download-info">
-                    <div className="platform-name">
-                      {getPlatformFromFilename(name)}
-                    </div>
-                    <div className="file-name">{name}</div>
-                  </div>
-                </a>
-              </div>
-            ))
-          ) : (
-            <div className="loading">Загрузка файлов для скачивания...</div>
-          )}
-        </div>
-      </div>
     </div>
   );
 };
