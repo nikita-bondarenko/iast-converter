@@ -17,7 +17,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -47,4 +46,9 @@ jobs:
           path: |
             src-tauri/target/*apple-darwin*/release/bundle/app/*.app
             src-tauri/target/*apple-darwin*/release/bundle/dmg/*.dmg
-          if-no-files-found: error 
+          if-no-files-found: error
+
+      - name: Enable Corepack & pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate 
