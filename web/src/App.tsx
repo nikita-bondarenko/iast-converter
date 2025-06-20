@@ -20,7 +20,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container ">
       <h1>🕉️ Конвертер IAST → русская диакритика</h1>
 
       <label htmlFor="input">Ввод IAST:</label>

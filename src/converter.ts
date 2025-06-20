@@ -43,9 +43,9 @@ const REPLACEMENTS: Record<string, string> = {
   'ṇ': `н${DOT_BELOW}`,
   'ś': `ш${ACUTE}`,
   'ṣ': `ш${DOT_BELOW}`,
-  'ḥ': 'х',
-  'ṃ': 'м',
-  'ṁ': 'м',
+  'ḥ': `х${DOT_BELOW}`,
+  'ṃ': `м${DOT_BELOW}`,
+  'ṁ': `м${DOT_ABOVE}`,
 
   // Plain consonants
   'k': 'к',
