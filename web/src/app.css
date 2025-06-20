@@ -102,4 +102,95 @@ button:disabled {
 
 .example:hover {
   background: #d5dbdb;
+}
+
+/* Стили для секции загрузок */
+.downloads {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.downloads h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.download-item {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.download-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.download-link {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.download-link:hover {
+  text-decoration: none;
+}
+
+.download-icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+  min-width: 40px;
+  text-align: center;
+}
+
+.download-info {
+  flex: 1;
+}
+
+.platform-name {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.file-name {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-family: 'Courier New', monospace;
+}
+
+.loading {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 2rem;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .download-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .container {
+    margin: 1rem;
+    padding: 1rem;
+  }
 } 
