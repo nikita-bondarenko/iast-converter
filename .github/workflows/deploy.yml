@@ -17,5 +17,5 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          cd /projects/cryptus-tg-mini-app
+          cd /projects/iast-converter
           sh restart.sh 
